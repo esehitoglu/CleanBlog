@@ -47,8 +47,9 @@ build/Release
 node_modules/
 jspm_packages/
 
-# temp directories
-temp/
+# public views directories
+public/
+views/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
