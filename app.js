@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 
 // Connect Db
 const myFunc = () => {
+  /*
   const userSchema = mongoose.Schema({
       name: String
   });
@@ -24,7 +25,7 @@ const myFunc = () => {
       if (data)
           console.log('Saved to DB = ' + data)
   }
-  );
+  );*/
 };
 
 
@@ -48,6 +49,14 @@ app.get('/', async(req,res)=>{
   const sayfayaYaz = await Data.find({})
   res.render('index',{
     sayfayaYaz:sayfayaYaz
+  })
+})
+
+app.get('/posts/:id',async(req,res)=>{
+  //console.log(req.params.id)
+  const postx = await Data.findById(req.params.id)
+  res.render('post',{
+    postx
   })
 })
 
