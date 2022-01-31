@@ -4,7 +4,8 @@ const ejs = require('ejs')
 const path = require('path')
 const Data = require('./models/Data')
 const mongoose = require('mongoose')
-
+const methodOverride = require('method-override')
+const fs = require('fs')
 
 // Connect Db
 const myFunc = () => {
@@ -42,6 +43,9 @@ app.set('view engine','ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+app.use(methodOverride('_method',{
+  methods:['POST','GET']
+}))
 
 // routes
 
@@ -60,6 +64,30 @@ app.get('/posts/:id',async(req,res)=>{
   })
 })
 
+app.get('/post/edit/:id', async (req, res) => {
+  const editRout = await Data.findOne({ _id: req.params.id });
+  res.render('edit', {
+    editRout,
+  });
+})
+
+app.put('/posts/:id',async(req, res) => {
+  console.log('deneme')
+  console.log(req.params.id)
+  const x = await Data.findOne({_id: req.params.id})
+  x.title = req.body.title
+  x.detail = req.body.detail
+  x.save()
+
+  res.redirect(`/posts/${req.params.id}`)
+}); 
+
+app.delete('/post/:id', async(req,res)=>{
+  const deletePost = await Data.findOne({_id:req.params.id})
+  await Data.findByIdAndRemove(req.params.id)
+  res.redirect('/')
+})
+
 app.get('/about',(req,res)=>{
   res.render('about')
 })
@@ -74,6 +102,8 @@ app.post('/data',async (req,res)=>{
   await Data.create(req.body)
   res.redirect('/')
 })
+
+
 
 const port = 3000
 app.listen(port,()=>{
